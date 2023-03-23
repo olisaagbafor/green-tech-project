@@ -1,7 +1,7 @@
 {
-  "name": "tractoria",
+  "name": "green-tect-project-api",
   "version": "1.0.0",
-  "description": "Tractoria Backend Code Base",
+  "description": "Green Tech Backend Code Base",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -11,20 +11,21 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/zecoms-software/tractoria.git"
+    "url": "git+ssh://git@github.com:olisaagbafor/green-tech-project.git"
   },
   "keywords": [
-    "Farm",
-    "Trading",
-    "Buy",
-    "Sell"
+    "E-commerce",
+    "Green Tech",
+    "Product",
+    "Fashion",
+    "Clothing"
   ],
-  "author": "zecoms-software",
+  "author": "olisaagbafor",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/zecoms-software/tractoria/issues"
+    "url": "https://github.com/olisaagbafor/green-tech-project/issues"
   },
-  "homepage": "https://github.com/zecoms-software/tractoria#readme",
+  "homepage": "https://github.com/olisaagbafor/green-tech-project#readme",
   "dependencies": {
     "bcrypt": "^5.1.0",
     "colors": "^1.4.0",

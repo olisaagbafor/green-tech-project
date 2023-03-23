@@ -38,8 +38,9 @@ export const authenticate = asyncHandler(async (req, res, next) => {
 // Grant Access to specific roles
 export const authorize = (...roles) => {
     return (req, res, next) => {
-        if (!roles.includes(req.user.role)) {
-            return next(new ErrorResponse(`You are not allowed to perform this action!`, 403));
+
+        if (!req.user.roles.some(role => roles.includes(role))) {
+            return next(new ErrorResponse(`You are not authorized to perform this action!`, 403));
         }
         next();
     }

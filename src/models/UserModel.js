@@ -20,12 +20,10 @@ const UserSchema = new mongoose.Schema({
     required: [true, "Please add the User Phone number"],
     unique: true,
   },
-  role: {
-    type: String,
-    enum: {
-      values: ['buyer', 'seller'],
-      message: '{VALUE} role is not supported'
-    },
+  roles: {
+    type: [String],
+    values: ['buyer', 'seller', 'admin'],
+    message: '{VALUE} role is not supported',
     default: 'buyer',
   },
   password: {
