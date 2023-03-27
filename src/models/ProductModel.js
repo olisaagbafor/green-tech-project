@@ -13,9 +13,18 @@ const ProductSchema = new mongoose.Schema({
     tags: [String],
     sizes: [String],
     colors: [String],
-    price: Number,
-    quantity: Number,
-    rating: Number,
+    price: {
+        type: Number,
+        required: [true, "Please add a Product price"],
+    },
+    quantity: {
+        type: Number,
+        required: [true, "Please add a Product quantity"],
+    },
+    rating: {
+        type: Number,
+        default: 0
+    },
     isPublished: {
         type: Boolean,
         default: true
