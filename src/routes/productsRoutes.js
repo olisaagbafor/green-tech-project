@@ -17,6 +17,6 @@ router.get('/', advancedResults(ProductModel), getProducts)
 router.post('/', authenticate, createProduct)
 router.get('/:id', getProduct)
 router.put('/:id', authenticate, updateProduct)
-router.delete('/:id', authenticate, authorize('admin'), deleteProduct)
+router.delete('/:id', authenticate, deleteProduct)
 
 export default router;

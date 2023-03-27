@@ -101,8 +101,70 @@ export const removeFromCart = asyncHandler(async (req, res, next) => {
 
 //@description: Checkout products in cart
 //@return:  null
-//@route:   POST /api/v1/Carts/checkout
+//@route:   GET /api/v1/users/:userId/carts/checkout
 //@access:  Private
-export const checkOutCart = asyncHandler(async (req, res, next) => {
+export const checkOut = asyncHandler(async (req, res, next) => {
+    const { userId } = req.params;
 
+    // Check if user has active cart
+    let userCart = await CartModel.findOne({ user: userId });
+
+    // If user has no active cart, return error
+    if (!userCart) {
+        return next(new ErrorResponse("Cart not found", 404));
+    }
+
+    // Check if cart has products
+    if (userCart.products.length === 0) {
+        return next(new ErrorResponse("Cart is empty", 404));
+    }
+
+    // Get the Products current info
+    // const cartProducts = await CartModel.find({ user: userId }).populate("products._id");
+    const products = await ProductModel.find({ _id: { $in: userCart.products.$[product]._id } });
+
+    return res.status(200).json({ success: true, data: products });
+
+    if (!cartProducts) return next(new ErrorResponse("Cart not found", 404));
+
+    userCart.checkOut(cartProducts[0].products);
+
+    return res.status(200).json({ success: true, data: cartProducts });
+
+    const cartProductsArray = cartProducts[0].products;
+
+    const cartProductsArrayWithQuantity = cartProductsArray.map((product) => {
+        return { ...product.product._doc, quantity: product.quantity };
+    });
+
+    const cartProductsArrayWithQuantityAndPrice = cartProductsArrayWithQuantity.map((product) => {
+        return { ...product, price: product.price * product.quantity };
+    });
+
+    const cartTotal = cartProductsArrayWithQuantityAndPrice.reduce((acc, product) => {
+        return acc + product.price;
+    }, 0);
+
+    // Check if user has enough money
+    if (user.balance < cartTotal) {
+        return next(new ErrorResponse("Not enough money", 400));
+    }
+
+    // Update user balance
+
+    const updatedUser = await UserModel.findByIdAndUpdate({ _id: userId }, { balance: user.balance - cartTotal }, { new: true });
+
+    // Update products quantity
+    cartProductsArrayWithQuantity.forEach(async (product) => {
+        const updatedProduct = await ProductModel.findByIdAndUpdate(
+            { _id: product._id },
+            { quantity: product.quantity - product.quantity },
+            { new: true }
+        );
+    });
+
+    // Delete cart
+    await CartModel.findByIdAndDelete({ _id: userCart._id });
+
+    res.status(201).json({ success: true, data: updatedUser });
 })
