@@ -121,50 +121,15 @@ export const checkOut = asyncHandler(async (req, res, next) => {
 
     // Get the Products current info
     // const cartProducts = await CartModel.find({ user: userId }).populate("products._id");
-    const products = await ProductModel.find({ _id: { $in: userCart.products.$[product]._id } });
+    // const products = await ProductModel.find({ _id: { $in: 'userCart.products.$.product._id' } });
 
-    return res.status(200).json({ success: true, data: products });
+    const productIds = userCart.products.map(product => {
+        return product._id
+    })
 
-    if (!cartProducts) return next(new ErrorResponse("Cart not found", 404));
+    const products = await ProductModel.find({ _id: { $in: productIds } });
 
-    userCart.checkOut(cartProducts[0].products);
+    const cart = userCart.checkOut(products);
 
-    return res.status(200).json({ success: true, data: cartProducts });
-
-    const cartProductsArray = cartProducts[0].products;
-
-    const cartProductsArrayWithQuantity = cartProductsArray.map((product) => {
-        return { ...product.product._doc, quantity: product.quantity };
-    });
-
-    const cartProductsArrayWithQuantityAndPrice = cartProductsArrayWithQuantity.map((product) => {
-        return { ...product, price: product.price * product.quantity };
-    });
-
-    const cartTotal = cartProductsArrayWithQuantityAndPrice.reduce((acc, product) => {
-        return acc + product.price;
-    }, 0);
-
-    // Check if user has enough money
-    if (user.balance < cartTotal) {
-        return next(new ErrorResponse("Not enough money", 400));
-    }
-
-    // Update user balance
-
-    const updatedUser = await UserModel.findByIdAndUpdate({ _id: userId }, { balance: user.balance - cartTotal }, { new: true });
-
-    // Update products quantity
-    cartProductsArrayWithQuantity.forEach(async (product) => {
-        const updatedProduct = await ProductModel.findByIdAndUpdate(
-            { _id: product._id },
-            { quantity: product.quantity - product.quantity },
-            { new: true }
-        );
-    });
-
-    // Delete cart
-    await CartModel.findByIdAndDelete({ _id: userCart._id });
-
-    res.status(201).json({ success: true, data: updatedUser });
+    return res.status(200).json({ success: true, data: cart });
 })

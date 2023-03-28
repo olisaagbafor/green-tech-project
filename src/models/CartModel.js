@@ -64,19 +64,22 @@ CartSchema.methods.removeProduct = async function (productId, quantity) {
 CartSchema.methods.checkOut = async function (products) {
     let cart = this;
 
-    cart.products = cart.products.map(p => {
-        p.price = p._id.price
-
-    })
-
     cart.products = cart.products.filter(p => products.map(product => {
-        if (product._id.toString() === p.product._id.toString()) {
-            p.quantity = product.quantity;
-
+        if (product._id.toString() === p._id.toString()) {
+            p.price = product.price
+            product.quantity -= p.quantity
+            if (product.quantity <= 0) {
+                return null;
+            }
         }
         return p;
     }));
-    cart.totalAmount = cart.products.reduce((acc, p) => acc + p.product._id.price * p.quantity, 0);
+
+    cart.totalAmount = cart.products.reduce((acc, p) => acc + p.price * p.quantity, 0);
+    await this.model("Product").bulkWrite(products.map(p => ({ updateOne: { filter: { _id: p._id }, update: { $set: { quantity: p.quantity } } } })));
+    await this.model("Order").create({ user: cart.user, products: cart.products, totalAmount: cart.totalAmount });
+    cart.products = [];
+    cart.totalAmount = 0;
     await cart.save();
     return cart;
 }

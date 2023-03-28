@@ -1,22 +1,20 @@
 import mongoose from "mongoose";
 
-const CartSchema = new mongoose.Schema({
+const OrderSchema = new mongoose.Schema({
     user: {
         type: mongoose.Types.ObjectId,
         ref: "User"
     },
     products: [{
-        product: {
-            _id: {
-                type: mongoose.Types.ObjectId,
-                ref: "Product"
-            },
-            name: String,
-            brand: String,
-            price: {
-                type: Number,
-                default: 0
-            }
+        _id: {
+            type: mongoose.Types.ObjectId,
+            ref: "Product"
+        },
+        name: String,
+        brand: String,
+        price: {
+            type: Number,
+            default: 0
         },
         quantity: {
             type: Number,
@@ -34,18 +32,12 @@ const CartSchema = new mongoose.Schema({
     },
     paymentMethod: {
         type: String,
-        enum: ['cod', 'card'],
-        default: 'cod'
+        enum: ['cod', 'card', 'wallet'],
+        default: 'wallet'
     },
     paymentStatus: {
         type: String,
         enum: ['pending', 'processing', 'completed', 'cancelled'],
-    },
-    paymentResult: {
-        id: String,
-        status: String,
-        updateTime: String,
-        email: String
     },
     shippingAddress: {
         address: String,
@@ -80,4 +72,4 @@ const CartSchema = new mongoose.Schema({
 
 
 
-export default mongoose.model("Cart", CartSchema);
+export default mongoose.model("Order", OrderSchema);
