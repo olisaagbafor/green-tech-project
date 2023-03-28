@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 //importing dependencies
+import fileUpload from "express-fileupload";
 import express from "express";
 import cookieParser from "cookie-parser";
 import logger from "./src/config/logger.js";
@@ -24,6 +25,12 @@ routes(app);
 
 // Connect to Database
 connectDB();
+
+// Set static folder
+app.use(express.static("public"));
+
+// File uploading
+app.use(fileUpload());
 
 // Cookie parsing
 app.use(cookieParser());

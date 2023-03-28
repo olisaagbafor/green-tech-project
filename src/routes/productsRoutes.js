@@ -8,7 +8,8 @@ import {
     getProduct,
     createProduct,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    productPhotoUpload
 } from '../controllers/productsController.js';
 
 const router = express.Router();
@@ -17,6 +18,7 @@ router.get('/', advancedResults(ProductModel), getProducts)
 router.post('/', authenticate, createProduct)
 router.get('/:id', getProduct)
 router.put('/:id', authenticate, updateProduct)
+router.put('/:id/image-upload', productPhotoUpload)
 router.delete('/:id', authenticate, deleteProduct)
 
 export default router;
