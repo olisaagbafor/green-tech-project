@@ -14,7 +14,7 @@ import {
 
 const router = express.Router({ mergeParams: true });
 
-router.get('/', authenticate, authorize('admin'), advancedResults(CartModel), getCarts);
+router.get('/', authenticate, authorize('admin'), advancedResults(CartModel, ['products._id', 'user']), getCarts);
 router.get('/checkout', authenticate, checkOut);
 router.get('/me', authenticate, getCart);
 router.get('/:id', authenticate, getCart);

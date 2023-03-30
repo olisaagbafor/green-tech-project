@@ -28,7 +28,7 @@ export const getCart = asyncHandler(async (req, res, next) => {
             return next(new ErrorResponse("User not found", 404));
         }
 
-        let cart = await CartModel.findOne({ user: userId })
+        let cart = await CartModel.findOne({ user: userId }).populate('products._id', 'user')
 
         // If user has no active cart, create one
         if (!cart) {
@@ -38,7 +38,7 @@ export const getCart = asyncHandler(async (req, res, next) => {
         return res.status(200).json({ success: true, data: cart });
     }
 
-    const cart = await CartModel.findById(req.params.id);
+    const cart = await CartModel.findById(req.params.id).populate('products._id', 'user');
 
     if (!cart) {
         return next(new ErrorResponse("Cart not found", 404));
@@ -69,7 +69,7 @@ export const addToCart = asyncHandler(async (req, res, next) => {
     }
 
     // Check if user has active cart
-    let userCart = await CartModel.findOne({ user: userId });
+    let userCart = await CartModel.findOne({ user: userId }).populate('products._id', 'user');
 
     // If user has no active cart, create one
     if (!userCart) {
@@ -104,7 +104,7 @@ export const removeFromCart = asyncHandler(async (req, res, next) => {
     }
 
     // Check if user has active cart
-    let userCart = await CartModel.findOne({ user: userId });
+    let userCart = await CartModel.findOne({ user: userId }).populate('products._id', 'user');
 
     // If user has no active cart, return error
     if (!userCart) {
@@ -126,7 +126,7 @@ export const checkOut = asyncHandler(async (req, res, next) => {
     const { userId } = req.params;
 
     // Check if user has active cart
-    let userCart = await CartModel.findOne({ user: userId });
+    let userCart = await CartModel.findOne({ user: userId }).populate('products._id', 'user');
 
     // If user has no active cart, return error
     if (!userCart) {

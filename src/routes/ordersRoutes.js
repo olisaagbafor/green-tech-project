@@ -12,7 +12,7 @@ import {
 
 const router = express.Router({ mergeParams: true });
 
-router.get('/', authenticate, advancedResults(OrderModel), getOrders);
+router.get('/', authenticate, advancedResults(OrderModel, ['products._id', 'user']), getOrders);
 router.get('/:id', authenticate, getOrder);
 router.put('/:id/process-payment', processPayment);
 

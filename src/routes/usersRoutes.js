@@ -13,6 +13,7 @@ import {
 
 // other resources routes
 import cartsRoutes from './cartsRoutes.js';
+import ordersRoutes from './ordersRoutes.js';
 
 const router = express.Router({ mergeParams: true });
 
@@ -24,5 +25,6 @@ router.delete('/:id', authenticate, authorize('admin'), deleteUser);
 
 // Re-route into other resource routers
 router.use('/:userId/carts', cartsRoutes);
+router.use('/:userId/orders', ordersRoutes);
 
 export default router;
