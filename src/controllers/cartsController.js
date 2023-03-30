@@ -17,14 +17,33 @@ export const getCarts = asyncHandler(async (req, res, next) => {
 //@description: Get single Cart
 //@return: object of a cart
 //@route:   GET /api/v1/carts/:id
+//@route:   GET /api/v1/users/:userId/carts/me
 //@access: Public
 export const getCart = asyncHandler(async (req, res, next) => {
-    const carts = await CartModel.findById(req.params.id);
+    if (req.params.userId) {
+        const { userId } = req.params
+        const user = await UserModel.findById(userId);
 
-    if (!carts) {
+        if (!user) {
+            return next(new ErrorResponse("User not found", 404));
+        }
+
+        let cart = await CartModel.findOne({ user: userId })
+
+        // If user has no active cart, create one
+        if (!cart) {
+            cart = await CartModel.create({ user: { ...user } });
+        }
+
+        return res.status(200).json({ success: true, data: cart });
+    }
+
+    const cart = await CartModel.findById(req.params.id);
+
+    if (!cart) {
         return next(new ErrorResponse("Cart not found", 404));
     }
-    return res.status(200).send({ success: true, data: carts });
+    return res.status(200).send({ success: true, data: cart });
 });
 
 

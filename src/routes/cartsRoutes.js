@@ -16,6 +16,7 @@ const router = express.Router({ mergeParams: true });
 
 router.get('/', authenticate, authorize('admin'), advancedResults(CartModel), getCarts);
 router.get('/checkout', authenticate, checkOut);
+router.get('/me', authenticate, getCart);
 router.get('/:id', authenticate, getCart);
 router.put('/add-to-cart', authenticate, addToCart);
 router.put('/remove-from-cart', authenticate, removeFromCart);
