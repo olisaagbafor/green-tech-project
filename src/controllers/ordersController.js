@@ -19,7 +19,9 @@ export const getOrders = asyncHandler(async (req, res, next) => {
             return next(new ErrorResponse("User not found", 404));
         }
 
-        const orders = await OrderModel.find({ user: userId }).populate('products._id', 'user')
+        const orders = await OrderModel.find({ user: userId })
+            .populate('products._id')
+            .populate('user')
 
         return res.status(200).json({ success: true, count: orders.length, data: orders });
     }
@@ -32,7 +34,9 @@ export const getOrders = asyncHandler(async (req, res, next) => {
 //@route:   GET /api/v1/orders/:id
 //@access: Public
 export const getOrder = asyncHandler(async (req, res, next) => {
-    const orders = await OrderModel.findById(req.params.id).populate('products._id', 'user');
+    const orders = await OrderModel.findById(req.params.id)
+        .populate('products._id')
+        .populate('user');
 
     if (!orders) {
         return next(new ErrorResponse("Order not found", 404));
@@ -47,7 +51,9 @@ export const getOrder = asyncHandler(async (req, res, next) => {
 //@access:  Private
 export const processPayment = asyncHandler(async (req, res, next) => {
 
-    const order = await OrderModel.findById(req.params.id).populate('products._id', 'user');
+    const order = await OrderModel.findById(req.params.id)
+        .populate('products._id')
+        .populate('user');
 
     if (!order) {
         return next(new ErrorResponse("Order not found", 404));
