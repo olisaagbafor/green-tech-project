@@ -77,11 +77,11 @@ CartSchema.methods.checkOut = async function (products) {
 
     cart.totalAmount = cart.products.reduce((acc, p) => acc + p.price * p.quantity, 0);
     await this.model("Product").bulkWrite(products.map(p => ({ updateOne: { filter: { _id: p._id }, update: { $set: { quantity: p.quantity } } } })));
-    await this.model("Order").create({ user: cart.user, products: cart.products, totalAmount: cart.totalAmount });
+    const order = await this.model("Order").create({ user: cart.user, products: cart.products, totalAmount: cart.totalAmount });
     cart.products = [];
     cart.totalAmount = 0;
     await cart.save();
-    return cart;
+    return order;
 }
 
 export default mongoose.model("Cart", CartSchema);

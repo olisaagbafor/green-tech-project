@@ -154,7 +154,7 @@ export const checkOut = asyncHandler(async (req, res, next) => {
 
     const products = await ProductModel.find({ _id: { $in: productIds } });
 
-    const cart = userCart.checkOut(products);
+    const order = await userCart.checkOut(products);
 
-    return res.status(200).json({ success: true, data: cart });
+    return res.status(200).json({ success: true, data: order });
 })
