@@ -73,9 +73,7 @@ export const addToCart = asyncHandler(async (req, res, next) => {
     }
 
     // Check if user has active cart
-    let userCart = await CartModel.findOne({ user: userId })
-        .populate('products._id')
-        .populate('user');
+    let userCart = await CartModel.findOne({ user: userId });
 
     // If user has no active cart, create one
     if (!userCart) {
@@ -110,9 +108,7 @@ export const removeFromCart = asyncHandler(async (req, res, next) => {
     }
 
     // Check if user has active cart
-    let userCart = await CartModel.findOne({ user: userId })
-        .populate('products._id')
-        .populate('user');
+    let userCart = await CartModel.findOne({ user: userId });
 
     // If user has no active cart, return error
     if (!userCart) {
