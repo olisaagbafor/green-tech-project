@@ -58,6 +58,26 @@ export const updateUser = asyncHandler(async (req, res, next) => {
 
 
 
+//@description: Update User
+//@return:  object of User
+//@route:   PUT /api/v1/User/:id/top-up
+//@access:  Private
+export const topUpUser = asyncHandler(async (req, res, next) => {
+    const { amount } = req.body
+    console.log(amount);
+    const user = await UserModel.findByIdAndUpdate(req.params.id, { $inc: { balance: amount } }, {
+        new: true,
+        runValidators: true
+    });
+
+    if (!user) {
+        return next(new ErrorResponse("User not found", 404));
+    }
+    return res.status(200).send({ success: true, data: user });
+});
+
+
+
 //@description: Delete User
 //@return:  empty object
 //@route:   DELETE /api/v1/User/:id

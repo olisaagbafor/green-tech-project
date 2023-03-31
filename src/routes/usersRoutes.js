@@ -8,6 +8,7 @@ import {
     getSingleUser,
     createUser,
     updateUser,
+    topUpUser,
     deleteUser
 } from '../controllers/usersController.js';
 
@@ -21,6 +22,7 @@ router.get('/', authenticate, authorize('admin'), advancedResults(UserModel), ge
 router.post('/', authenticate, authorize('admin'), createUser);
 router.get('/:id', authenticate, authorize('admin'), getSingleUser);
 router.put('/:id', authenticate, authorize('admin'), updateUser);
+router.put('/:id/top-up', authenticate, topUpUser);
 router.delete('/:id', authenticate, authorize('admin'), deleteUser);
 
 // Re-route into other resource routers
