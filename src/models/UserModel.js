@@ -37,7 +37,7 @@ const UserSchema = new mongoose.Schema({
   },
   balance: {
     type: Number,
-    default: 1000,
+    default: 100000,
   },
   resetPasswordToken: String,
   resetPasswordExpire: Date,
